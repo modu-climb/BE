@@ -67,8 +67,8 @@ gantt
 | 0.5 | ADR: BE(Spring Boot)·AI(Python 워커) 분리, 인증 방식, 모듈 구조 | 2 | NFR-04 | ADR 문서 |
 | 0.6 | API 명세 확정(요청·응답 스키마, 오류 코드) | 2 | 전체 | OpenAPI 초안 |
 | **1** | **M1 프로젝트 골격 (MK-8)** | **3\~5** | | |
-| 1.1 | Spring Boot 3·Java 21·Gradle 프로젝트 생성, 모듈별 패키지 구조(헥사고날) | 3 | NFR-04 | 프로젝트 골격 |
-| 1.2 | 아키텍처 규칙 테스트(ArchUnit 또는 Spring Modulith): 도메인 → 인프라 의존 금지, 모듈 간 경계 | 3 | NFR-04 | 아키텍처 테스트 |
+| 1.1 | Spring Boot 3·Java 21·Gradle 프로젝트 생성, 도메인별 패키지 구조([코드 컨벤션](CODE_CONVENTION.md)) | 3 | NFR-04 | 프로젝트 골격 |
+| 1.2 | 아키텍처 규칙 테스트(ArchUnit): 레이어 의존 방향, 도메인 간 순환 의존 금지 | 3 | NFR-04 | 아키텍처 테스트 |
 | 1.3 | Docker Compose: PostgreSQL, Redis, MinIO | 3\~4 | | `compose.yaml` |
 | 1.4 | Flyway 마이그레이션, ERD 기준 초기 스키마 | 4 | | 마이그레이션 스크립트 |
 | 1.5 | 공통 기반: 오류 응답 형식, Idempotency-Key 처리, 요청 로깅 | 4\~5 | NFR-03 | 공통 모듈 |
