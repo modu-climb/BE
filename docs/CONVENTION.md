@@ -13,6 +13,7 @@
 | `[REFACTOR]` | `refactor` | 동작 변경 없는 구조 개선 |
 | `[DOCS]` | `docs` | 문서 |
 | `[TEST]` | `test` | 테스트 추가·수정 |
+| `[STYLE]` | `style` | 동작 변경 없는 코드 스타일 수정 |
 | `[CHORE]` | `chore` | 빌드, 설정, 의존성, CI 등 |
 
 ## 2. 이슈

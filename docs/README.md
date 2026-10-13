@@ -13,5 +13,6 @@ Notion "모클(모두의 클라이밍)" 위키에서 2026-10-13에 내보낸 문
 | [07_작업_이슈.csv](07_작업_이슈.csv) | 칸반 보드 "작업 이슈" DB 내보내기 (엑셀에서 바로 열림) | 2026-10-13 기준 |
 | [08_백엔드_WBS.md](08_백엔드_WBS.md) | 백엔드 28주 마일스톤, 작업 분해, 버퍼·리스크 | - |
 | [CONVENTION.md](CONVENTION.md) | 이슈·브랜치·커밋·PR 규칙 | - |
+| [CODE_CONVENTION.md](CODE_CONVENTION.md) | 패키지 구조(Clean Architecture), 레이어 책임, 코드 스타일, 테스트 규칙 | - |
 
 다이어그램은 Mermaid 코드 블록으로 들어 있어 GitHub, Notion, Obsidian, VS Code(Markdown Preview Mermaid 확장)에서 그림으로 보입니다.
