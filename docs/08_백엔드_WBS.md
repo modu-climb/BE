@@ -61,34 +61,34 @@ gantt
 | --- | --- | --- | --- | --- |
 | **0** | **M0 도메인 설계** | **1\~2** | | |
 | 0.1 | 이벤트 스토밍: 업로드 → 홀드 확정 → 분석 → 피드백 → 비교 흐름의 이벤트·커맨드 정리 | 1 | 전체 | 이벤트 스토밍 결과 |
-| 0.2 | 바운디드 컨텍스트와 컨텍스트 맵(회원, 영상, 벽·홀드, 문제, 분석, 피드백, 코치) | 1 | 전체 | 컨텍스트 맵 |
+| 0.2 | 바운디드 컨텍스트와 컨텍스트 맵(회원, 영상, 벽·문제, 분석, 피드백), 도메인 간 의존 방향 | 1 | 전체 | 컨텍스트 맵 |
 | 0.3 | 애그리거트 경계와 불변식 정리(Problem·Attempt 분리, AnalysisJob 상태 전이) | 2 | 전체 | 애그리거트 설계 문서 |
 | 0.4 | 유비쿼터스 언어 용어집(한글·영문·코드명) | 1\~2 | 전체 | 용어집 |
-| 0.5 | ADR: BE(Spring Boot)·AI(Python 워커) 분리, 인증 방식, 모듈 구조 | 2 | NFR-04 | ADR 문서 |
-| 0.6 | API 명세 확정(요청·응답 스키마, 오류 코드) | 2 | 전체 | OpenAPI 초안 |
+| 0.5 | ADR: BE(Spring Boot)·AI(Python 워커) 분리, 코드 구조(Clean Architecture), 인증(카카오 소셜 로그인 + JWT), 분석 단계·메시지 계약, ID 전략 | 2 | NFR-04 | ADR 문서 |
+| 0.6 | API 명세 확정(요청·응답 스키마, 오류 코드) | 2 | 전체 | API 명세 문서 (OpenAPI는 M1에서 springdoc로 생성) |
 | **1** | **M1 프로젝트 골격 (MK-8)** | **3\~5** | | |
 | 1.1 | Spring Boot 3·Java 21·Gradle 프로젝트 생성, 도메인별 패키지 구조([코드 컨벤션](CODE_CONVENTION.md)) | 3 | NFR-04 | 프로젝트 골격 |
 | 1.2 | 아키텍처 규칙 테스트(ArchUnit): 레이어 의존 방향, 도메인 간 순환 의존 금지 | 3 | NFR-04 | 아키텍처 테스트 |
 | 1.3 | Docker Compose: PostgreSQL, Redis, MinIO | 3\~4 | | `compose.yaml` |
 | 1.4 | Flyway 마이그레이션, ERD 기준 초기 스키마 | 4 | | 마이그레이션 스크립트 |
-| 1.5 | 공통 기반: 오류 응답 형식, Idempotency-Key 처리, 요청 로깅 | 4\~5 | NFR-03 | 공통 모듈 |
+| 1.5 | global 공통: 오류 응답(BaseCode·ExceptionAdvice), BaseResponse, BaseEntity(JPA Auditing), Idempotency-Key 처리, 요청 로깅 | 4\~5 | NFR-03 | 공통 모듈 |
 | 1.6 | 테스트 기반: Testcontainers 통합 테스트 설정 | 4\~5 | | 테스트 설정 |
 | 1.7 | CI(GitHub Actions): 빌드, 테스트, 아키텍처 규칙 검사 | 5 | | 워크플로 |
 | **2** | **M2 회원·인증·신체 프로필** | **6\~7** | | |
-| 2.1 | 회원 가입·로그인(0.5에서 정한 방식) | 6 | NFR-07 | 인증 API |
+| 2.1 | 카카오 소셜 로그인, JWT access/refresh 발급·재발급·로그아웃 | 6 | NFR-07 | 인증 API |
 | 2.2 | 자원 소유자 검사(본인 영상·리포트만 접근) | 6\~7 | NFR-07 | 접근 제어 |
 | 2.3 | 신체 프로필 등록·수정(이력 보존) | 7 | FR-01 | `PUT /v1/me/body-profile` |
 | 2.4 | 분석 동의·학습 활용 동의 분리 저장 | 7 | NFR-08 | 동의 기록 |
 | **3** | **M3 영상 업로드** | **8\~9** | | |
 | 3.1 | 스토리지 포트·MinIO 어댑터, presigned PUT URL 발급(짧은 만료) | 8 | FR-02, NFR-07 | `POST /v1/videos/upload-url` |
-| 3.2 | 업로드 완료 알림, 영상 메타데이터 저장 | 8\~9 | FR-02 | `POST /v1/videos/{id}/complete` |
+| 3.2 | 업로드 완료 알림, 영상 메타데이터 저장, 미완료 업로드(24시간) 정리 배치 | 8\~9 | FR-02 | `POST /v1/videos/{id}/complete` |
 | 3.3 | 시도(Attempt) 생성, 보관 기한(retain_until) 설정 | 9 | FR-02, NFR-08 | `POST /v1/attempts` |
 | **4** | **M4 분석 작업 오케스트레이션** | **12\~15** | | |
-| 4.1 | 워커 메시지 계약을 JSON Schema로 고정(`RUN_PHASE`, `PROGRESS`, `PHASE_COMPLETED`, `PHASE_FAILED`) | 12 | NFR-05 | 스키마 파일 |
+| 4.1 | 워커 메시지 계약을 JSON Schema로 고정(`RUN_PHASE`, `PROGRESS`, `PHASE_COMPLETED`, `PHASE_FAILED` / 단계 `PREPROCESS`·`INFER_PROBLEM`·`ANALYZE` / `runNo`) | 12 | NFR-05 | 스키마 파일 |
 | 4.2 | AnalysisJob 애그리거트와 상태 머신(허용 전이만 통과) | 12\~13 | FR-12 | 상태 머신·단위 테스트 |
 | 4.3 | 작업 큐 포트·Redis Streams 발행 어댑터(`analysis.jobs`) | 13 | | 발행 어댑터 |
-| 4.4 | 이벤트 소비자(`analysis.events`): consumer group, PEL 회수, jobId+phase+attemptNo 중복 제거 | 13\~14 | NFR-03 | 소비 어댑터 |
-| 4.5 | 실패 재시도(최대 2회)와 7일 무응답 EXPIRED 처리 | 14 | NFR-03 | 재시도·만료 배치 |
+| 4.4 | 이벤트 소비자(`analysis.events`): consumer group, PEL 회수, jobId+phase+runNo 중복 제거 | 13\~14 | NFR-03 | 소비 어댑터 |
+| 4.5 | 실패 재시도(같은 상태에서 runNo 증가, 작업당 최대 2회)와 사용자 입력 대기 7일 EXPIRED 처리 | 14 | NFR-03 | 재시도·만료 배치 |
 | 4.6 | 가짜 워커(stub): 계약대로 진행률·결과·실패 이벤트를 보냄 | 13\~14 | | 테스트용 워커 |
 | 4.7 | 작업 상태 조회, SSE 진행 상황 | 14\~15 | FR-12 | `GET /v1/jobs/{id}`, `/events` |
 | 4.8 | pipelineVersion·모델 식별자·산출물 키 저장 | 15 | NFR-05 | analysis_artifact 저장 |
@@ -97,6 +97,7 @@ gantt
 | 5.2 | 기준 홀드 탭 전달 → 작업 재개 | 18 | FR-05 | `POST .../hold-selection` |
 | 5.3 | 홀드 추가·제외, 시작·종료 지정, Problem 확정 | 19 | FR-06, FR-07 | `POST .../hold-confirmation` |
 | 5.4 | 같은 문제·같은 촬영 위치 재시도는 확정 홀드 재사용 | 19 | FR-06 | 재사용 로직 |
+| 5.5 | 누락 홀드 탭 영역 분리 요청(우선순위 스트림) | 19 | FR-07 | `POST .../holds` |
 | **6** | **M6 결과 조회·비교·이력** | **20\~22** | | |
 | 6.1 | 피드백 리포트 저장·조회(문장마다 근거 지표 1개 이상 검증) | 20 | FR-10, FR-11, NFR-06 | `GET .../report` |
 | 6.2 | 오버레이 재생 데이터 조회(스토리지 키 → 단기 URL) | 20\~21 | FR-08 | `GET .../overlay` |
@@ -128,7 +129,7 @@ gantt
 | 리스크 | 대응 |
 | --- | --- |
 | 상태 머신·Redis Streams가 예상보다 복잡함 | M4에 4주를 잡고 바로 뒤에 버퍼 2주를 둠 |
-| 인증 방식 결정 지연 | M0의 ADR(0.5)에서 확정, 늦어지면 이메일 로그인으로 먼저 진행 |
+| 카카오 로그인에서 이메일을 못 받음(선택 동의·비즈 앱 심사) | 신원은 소셜 계정 ID로 잡고 이메일은 선택값으로 둠([ADR-0003](adr/0003-인증-소셜-로그인-JWT.md)) |
 | 메시지 계약이 AI 트랙에서 자주 바뀜 | JSON Schema를 양쪽 저장소의 기준으로 두고, 바뀌면 이슈로 공유 |
 | 워커 준비 지연 | 가짜 워커로 기능 개발을 끝내고, 통합은 마지막 버퍼에서 |
-| DDD 경계를 잘못 잡아 중간에 재설계 | M0에 2주를 쓰고, M1에서 아키텍처 규칙 테스트로 경계를 강제 |
+| DDD 경계를 잘못 잡아 중간에 재설계 | M0에 2주를 쓰고, M1에서 ArchUnit으로 레이어·도메인 간 의존 방향을 강제([코드 컨벤션](CODE_CONVENTION.md)) |

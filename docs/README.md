@@ -15,4 +15,15 @@ Notion "모클(모두의 클라이밍)" 위키에서 2026-10-13에 내보낸 문
 | [CONVENTION.md](CONVENTION.md) | 이슈·브랜치·커밋·PR 규칙 | - |
 | [CODE_CONVENTION.md](CODE_CONVENTION.md) | 패키지 구조(Clean Architecture), 레이어 책임, 코드 스타일, 테스트 규칙 | - |
 
+## 도메인 설계 (M0)
+
+| 파일 | 내용 |
+| --- | --- |
+| [domain/01_이벤트_스토밍.md](domain/01_이벤트_스토밍.md) | 커맨드·이벤트·정책, 결정이 필요했던 핫스팟 |
+| [domain/02_컨텍스트_맵.md](domain/02_컨텍스트_맵.md) | 바운디드 컨텍스트, 도메인 간 의존 방향, UseCase 배치 |
+| [domain/03_애그리거트.md](domain/03_애그리거트.md) | 애그리거트 경계와 불변식, 작업 상태 머신, ERD 변경 제안 |
+| [domain/04_용어집.md](domain/04_용어집.md) | 유비쿼터스 언어(한글·영문·코드명) |
+| [adr/](adr/README.md) | 주요 결정 기록(ADR) |
+| [api/API_명세.md](api/API_명세.md) | 요청·응답 형식, 엔드포인트, 오류 코드 |
+
 다이어그램은 Mermaid 코드 블록으로 들어 있어 GitHub, Notion, Obsidian, VS Code(Markdown Preview Mermaid 확장)에서 그림으로 보입니다.
